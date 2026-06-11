@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "phase": "preshow",
+  "show_id": "popcorn-2026",
+  "policy": {
+    "min_dwell_seconds": 6,
+    "max_dwell_seconds": 14,
+    "max_words_per_screen": 60,
+    "consecutive_repeat": false,
+    "loop_target_seconds": 240,
+    "audio_allowed": false
+  },
+  "_notes": "Anchors play in defined order across the loop; wildcards bag-refill randomise alongside them. Anchor 'every_n' is the slot interval \u2014 rebalanced 2026-06-10 (David) from 6 to 2 so core content (tonight/cast/warnings/tickets) is every OTHER slide, restoring the signed-off deck's ~80% 'tonight' mix; tickets appears twice per anchor cycle (walk-ins are preshow's main sale). The HOUSE-OPEN content-warnings slides are once-per-house-open one-shots, not part of the loop. Slides render live HTML via js/slide-templates.js keyed by the 'template' field below; template keys match the signed-off data-kind values in popcorn-foyer.html.",
+  "items": [
+    {
+      "kind": "anchor",
+      "id": "welcome-tonight",
+      "template": "welcome",
+      "every_n": 2,
+      "dwell_seconds": 9,
+      "preview_ref": "popcorn-foyer.html#P01"
+    },
+    {
+      "kind": "anchor",
+      "id": "tonight-show-info",
+      "template": "show-info",
+      "every_n": 2,
+      "dwell_seconds": 9,
+      "preview_ref": "popcorn-foyer.html#P02"
+    },
+    {
+      "kind": "anchor",
+      "id": "tonight-cast",
+      "template": "cast",
+      "every_n": 2,
+      "dwell_seconds": 11,
+      "preview_ref": "popcorn-foyer.html#P03"
+    },
+    {
+      "kind": "anchor",
+      "id": "tickets-walkins-early",
+      "template": "tickets-walkins",
+      "every_n": 2,
+      "dwell_seconds": 9,
+      "_notes": "Second tickets slot in the anchor cycle, spaced away from tickets-walkins below. Walk-in sales lead preshow.",
+      "preview_ref": "popcorn-foyer.html#P13"
+    },
+    {
+      "kind": "anchor",
+      "id": "content-warnings-top3",
+      "template": "warning-top3",
+      "every_n": 2,
+      "dwell_seconds": 9,
+      "preview_ref": "popcorn-foyer.html#P04"
+    },
+    {
+      "kind": "anchor",
+      "id": "safety-phones-fire",
+      "template": "safety",
+      "every_n": 2,
+      "dwell_seconds": 8,
+      "preview_ref": "popcorn-foyer.html#P06"
+    },
+    {
+      "kind": "anchor",
+      "id": "next-production-underdog",
+      "template": "next-production",
+      "every_n": 2,
+      "production_ref": "next_productions.json#underdog-2026",
+      "dwell_seconds": 11,
+      "preview_ref": "popcorn-foyer.html#P11",
+      "_notes": "Immediate next production. Includes poster (assets/posters/underdog-2026.jpg)."
+    },
+    {
+      "kind": "wildcard",
+      "id": "next-production-shakespeare",
+      "template": "next-production-2",
+      "tag": "future_production",
+      "weight": 1,
+      "production_ref": "next_productions.json#shakespeare-in-love-2026",
+      "dwell_seconds": 10,
+      "preview_ref": "popcorn-foyer.html#P11b",
+      "_notes": "After Underdog. Less frequent rotation since Underdog is the closer commercial ask."
+    },
+    {
+      "kind": "anchor",
+      "id": "volunteer-call",
+      "template": "volunteer",
+      "every_n": 2,
+      "dwell_seconds": 8,
+      "preview_ref": "popcorn-foyer.html#P12"
+    },
+    {
+      "kind": "anchor",
+      "id": "tickets-walkins",
+      "template": "tickets-walkins",
+      "every_n": 2,
+      "dwell_seconds": 9,
+      "preview_ref": "popcorn-foyer.html#P13",
+      "_notes": "Added 2026-06-10 (David spotted it missing): template was ported in FOY-01b but never wired into the loop. FoH SOLD-OUT announcement overlays/replaces this slide."
+    },
+    {
+      "kind": "one-shot",
+      "id": "content-warnings-full-1",
+      "template": "warning-full",
+      "trigger": "house-open",
+      "dwell_seconds": 10,
+      "content": {
+        "eyebrow": "Full Content Advisory",
+        "headline": "CONTENT WARNINGS",
+        "warning_ids": [
+          "strong-language",
+          "simulated-violence",
+          "loud-gunshots"
+        ]
+      },
+      "preview_ref": "popcorn-foyer.html#P05",
+      "_notes": "P05 split 2026-06-10 (David): slide 1 of 2, ends after the gunshots block. Plays once when FoH triggers HOUSE-OPEN. warning_ids filter requires FOY-06; until merged, warning-full renders all warnings."
+    },
+    {
+      "kind": "one-shot",
+      "id": "content-warnings-full-2",
+      "template": "warning-full",
+      "trigger": "house-open",
+      "dwell_seconds": 10,
+      "content": {
+        "eyebrow": "Full Content Advisory",
+        "headline": "CONTENT & ACCESSIBILITY",
+        "warning_ids": [
+          "mature-themes",
+          "flashing-lights",
+          "age-guidance",
+          "references-self-harm"
+        ]
+      },
+      "preview_ref": "popcorn-foyer.html#P05",
+      "_notes": "P05 split, slide 2 of 2. references-self-harm stays here while Dean confirms his cut (placeholders.warning-tbc-trio); drop the id from this list if he strikes it."
+    },
+    {
+      "kind": "wildcard",
+      "id": "about-ben-elton",
+      "template": "about-ben",
+      "tag": "context",
+      "weight": 1,
+      "dwell_seconds": 10,
+      "preview_ref": "popcorn-foyer.html#P07"
+    },
+    {
+      "kind": "wildcard",
+      "id": "about-the-play",
+      "template": "about-play",
+      "tag": "context",
+      "weight": 1,
+      "dwell_seconds": 10,
+      "preview_ref": "popcorn-foyer.html#P08"
+    },
+    {
+      "kind": "wildcard",
+      "id": "director-note",
+      "template": "director-quote",
+      "tag": "director_content",
+      "weight": 2,
+      "dwell_seconds": 10,
+      "preview_ref": "popcorn-foyer.html#P09"
+    },
+    {
+      "kind": "wildcard",
+      "id": "oscars-trivia",
+      "template": "did-you-know",
+      "tag": "did_you_know",
+      "weight": 1,
+      "dwell_seconds": 9,
+      "preview_ref": "popcorn-foyer.html#P10"
+    },
+    {
+      "kind": "wildcard",
+      "id": "criterion-trivia",
+      "template": "did-you-know-criterion",
+      "tag": "did_you_know",
+      "weight": 1,
+      "dwell_seconds": 9,
+      "preview_ref": "popcorn-foyer.html#P10b",
+      "_notes": "Facts sourced from criteriontheatre.co.uk/about/theatre \u2014 450+ productions, 1884 building, 6000 parts played, all-volunteer."
+    }
+  ]
+}
