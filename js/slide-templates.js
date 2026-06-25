@@ -368,7 +368,7 @@ export const slideTemplates = {
     return `<div class="split-layout">
         <div class="split-text">
           <p class="eyebrow calm">And coming later</p>
-          <h2 class="headline small cyan outline">${upper(prod.title) || "COMING SOON"}</h2>
+          <h2 class="headline small cyan">${upper(prod.title) || "COMING SOON"}</h2>
           <p class="body" style="max-width:none; margin-top:18px;">
             ${prod.synopsis_short || prod.synopsis_full || ""}
           </p>
@@ -613,7 +613,7 @@ export const slideTemplates = {
     return `<div class="split-layout">
         <div class="split-text">
           <p class="eyebrow calm">Coming later at ${ctx.show?.venue || "our theatre"}</p>
-          <h2 class="headline small cyan outline">${upper(prod.title) || "COMING SOON"}</h2>
+          <h2 class="headline small cyan">${upper(prod.title) || "COMING SOON"}</h2>
           <p class="subhead" style="color:var(--lavender); font-size:1.6vw;">${prod.author || ""}${prod.adapter ? ` &mdash; adapted by ${prod.adapter}` : ""}</p>
           <p class="review-quote">&ldquo;${review.quote || prod.synopsis_short || ""}&rdquo;<span class="source">${review.source || ""}</span></p>
           <p class="footline">${formatRange(prod.run_dates && prod.run_dates.first, prod.run_dates && prod.run_dates.last)} <span class="sep">/</span> Directed by ${prod.director || ""}</p>
