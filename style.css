@@ -523,11 +523,18 @@ body.nextgen-foyer,
 body.announcement-overlay-page {
   width: 1920px;
   height: 1080px;
-  background:
-    radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 34%),
-    linear-gradient(180deg, rgba(0,0,0,0.20), rgba(0,0,0,0.55)),
-    var(--colour-background);
+  /* Transparent: this page exists ONLY as an OBS Browser Source stacked over the
+     foyer scenes (see README). It was opaque ink+gradients until 2026-06-11, which
+     blacked out the underlying scene the first time the source was wired correctly. */
+  background: transparent;
   color: var(--colour-background-text);
+  overflow: hidden;
+  --ink: #0A0612;
+  --ink-2: #1A0E2A;
+  --neon-magenta: #FF1A75;
+  --neon-cyan: #00E5FF;
+  --poster-yellow: #FFD434;
+  --cream: #F4E5C2;
 }
 
 .ng-shell {
@@ -609,25 +616,112 @@ body.announcement-overlay-page {
 }
 
 .announcement-overlay {
-  position: absolute;
-  top: 0;
+  position: fixed;
   left: 0;
   right: 0;
-  min-height: 32%;
-  padding: 44px 64px;
-  background: rgba(0, 0, 0, 0.82);
-  border-bottom: 8px solid var(--colour-primary);
-  color: var(--colour-primary-text);
-  font-family: var(--font-headline);
-  font-size: 64px;
-  line-height: 1.05;
+  bottom: 0;
+  z-index: 10;
+  box-sizing: border-box;
   display: flex;
-  align-items: center;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+  justify-content: center;
+  padding: 0 64px 40px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 420ms ease, transform 420ms ease;
 }
 
-.announcement-overlay.hidden {
-  display: none;
+.announcement-overlay-page[data-pos="top"] .announcement-overlay {
+  top: 0;
+  bottom: auto;
+  padding: 40px 64px 0;
+  transform: translateY(-28px);
+}
+
+.announcement-overlay.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.announcement-band {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1500px;
+  min-height: 112px;
+  max-height: 156px;
+  padding: 22px 34px;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  overflow: hidden;
+  background: rgba(10, 6, 18, 0.92);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ink, #0A0612) 92%, transparent),
+    color-mix(in srgb, var(--ink-2, #1A0E2A) 92%, transparent)
+  );
+  border: 2px solid var(--neon-magenta, #FF1A75);
+  border-left: 12px solid var(--neon-cyan, #00E5FF);
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+}
+
+.announcement-overlay-page[data-kind="nudge"] .announcement-band {
+  border-color: var(--poster-yellow, #FFD434);
+  border-left-color: var(--poster-yellow, #FFD434);
+}
+
+.announcement-kicker {
+  flex: 0 0 auto;
+  padding-right: 26px;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  font-family: var(--font-headline);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  color: var(--neon-cyan, #00E5FF);
+}
+
+.announcement-overlay-page[data-kind="nudge"] .announcement-kicker {
+  color: var(--poster-yellow, #FFD434);
+}
+
+.announcement-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--cream, var(--colour-primary-text, #F4E5C2));
+  font-family: var(--font-headline);
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.announcement-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--neon-cyan, #00E5FF);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.announcement-overlay-page[data-kind="nudge"] .announcement-progress {
+  background: var(--poster-yellow, #FFD434);
+}
+
+.announcement-overlay-page[data-pos="top"] .announcement-progress {
+  top: 0;
+  bottom: auto;
 }
 
 /* =====================================================================
@@ -656,10 +750,11 @@ body.nextgen-foyer {
   --lavender:      #C8B9D8;
   --white:         #FFFFFF;
   --dim:           #6A5E7E;
-  /* glows */
-  --glow-magenta:  0 0 6px #FF1A75, 0 0 18px #FF1A75, 0 0 36px rgba(255, 26, 117, 0.5);
-  --glow-cyan:     0 0 6px #00E5FF, 0 0 18px #00E5FF, 0 0 36px rgba(0, 229, 255, 0.5);
-  --glow-yellow:   0 0 4px #FFD434, 0 0 14px rgba(255, 212, 52, 0.65);
+  /* glows — toned down 2026-06-24 (Chris: bloom overpowering, esp. cyan
+     coming-soon). Mirrors popcorn-foyer.html: crisp neon edge, cut wide halo. */
+  --glow-magenta:  0 0 3px rgba(255, 26, 117, 0.85), 0 0 11px rgba(255, 26, 117, 0.40), 0 0 22px rgba(255, 26, 117, 0.20);
+  --glow-cyan:     0 0 3px rgba(0, 229, 255, 0.80), 0 0 11px rgba(0, 229, 255, 0.38), 0 0 20px rgba(0, 229, 255, 0.18);
+  --glow-yellow:   0 0 3px rgba(255, 212, 52, 0.80), 0 0 9px rgba(255, 212, 52, 0.38);
 
   background:
     radial-gradient(ellipse 80% 60% at 30% 25%, rgba(180, 59, 255, 0.18), transparent 70%),
@@ -791,7 +886,7 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
 .nextgen-foyer .eyebrow {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 15px;
   letter-spacing: 6px;
   text-transform: uppercase;
   color: var(--neon-cyan);
@@ -816,8 +911,8 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
 .nextgen-foyer .headline.small  { font-size: 6vw; }
 .nextgen-foyer .headline.medium { font-size: 7.5vw; }
 .nextgen-foyer .headline.outline {
-  color: transparent;
-  -webkit-text-stroke: 2px var(--neon-magenta);
+  color: rgba(244, 229, 194, 0.10);
+  -webkit-text-stroke: 1.6px var(--neon-magenta);
   text-shadow: none;
 }
 .nextgen-foyer .headline.cyan { text-shadow: var(--glow-cyan); }
@@ -835,18 +930,18 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
 
 .nextgen-foyer .body {
   font-family: 'Inter', sans-serif;
-  font-size: 1.5vw;
+  font-size: min(1.6vw, 2.3vh);
   line-height: 1.5;
   color: var(--cream);
   max-width: 76%;
   margin: 0 0 18px 0;
 }
-.nextgen-foyer .body.small { font-size: 1.2vw; max-width: 70%; }
-.nextgen-foyer .body.mono  { font-family: 'JetBrains Mono', monospace; font-size: 1.1vw; letter-spacing: 1.5px; color: var(--lavender); }
+.nextgen-foyer .body.small { font-size: min(1.38vw, 2vh); max-width: 72%; }
+.nextgen-foyer .body.mono  { font-family: 'JetBrains Mono', monospace; font-size: min(1.25vw, 1.8vh); letter-spacing: 1.5px; color: var(--lavender); }
 
 .nextgen-foyer .footline {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.95vw;
+  font-size: min(1.18vw, 1.65vh);
   color: var(--cream-2);
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -873,7 +968,7 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
   align-items: baseline;
   padding: 10px 0;
   border-bottom: 1px solid rgba(200, 185, 216, 0.15);
-  font-size: 1.35vw;
+  font-size: min(1.5vw, 2.2vh);
 }
 .nextgen-foyer .cast-role {
   color: var(--lavender);
@@ -914,7 +1009,7 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
   text-align: center;
 }
 .nextgen-foyer .warning-detail {
-  font-size: 1.15vw;
+  font-size: min(1.32vw, 1.9vh);
   color: var(--cream);
   line-height: 1.4;
 }
@@ -1008,6 +1103,57 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
 }
 .nextgen-foyer .split-text > * { margin-left: 0; }
 
+/* Lower-third (TV-news band) — ported from popcorn-foyer.html for parity.
+   Not yet wired to a template, kept here so the type tier matches the source. */
+.nextgen-foyer .lower-third {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12%;
+  padding: 0 8%;
+}
+.nextgen-foyer .lower-third-bar {
+  display: flex;
+  align-items: stretch;
+  border: 2px solid var(--poster-yellow);
+  background: rgba(10, 6, 18, 0.85);
+  box-shadow: var(--glow-yellow);
+}
+.nextgen-foyer .lower-third-tag {
+  background: var(--poster-yellow);
+  color: var(--ink);
+  font-family: 'Anton', sans-serif;
+  font-size: 1.7vw;
+  letter-spacing: 3px;
+  padding: 16px 24px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+}
+.nextgen-foyer .lower-third-body {
+  flex: 1;
+  padding: 16px 24px;
+  color: var(--cream);
+  font-size: min(1.38vw, 2vh);
+  align-self: center;
+}
+
+/* Photo-gallery grid — rehearsal (preshow) + cast montage (postshow).
+   Copied from popcorn-foyer.html .photo-grid. Each cell shows the neon
+   "photo pending" fallback until Chris's photos land in assets/photos/. */
+.nextgen-foyer .photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5%;
+  margin-top: 22px;
+  height: 54%;
+}
+.nextgen-foyer .photo-grid .poster-frame {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
 /* Interval countdown */
 .nextgen-foyer .countdown-display {
   font-family: 'Anton', sans-serif;
@@ -1050,10 +1196,10 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
   aspect-ratio: 3 / 4;
   justify-self: end;
 }
-.nextgen-foyer .archive-text .body { max-width: none; }
+.nextgen-foyer .archive-text .body { max-width: none; font-size: min(1.34vw, 2.1vh); }
 .nextgen-foyer .archive-attribution {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.9vw;
+  font-size: min(1.08vw, 1.55vh);
   color: var(--cream-2);
   letter-spacing: 2px;
   margin-top: 10px;
@@ -1062,7 +1208,7 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
 .nextgen-foyer .review-quote {
   font-family: 'Inter', sans-serif;
   font-style: italic;
-  font-size: 1.3vw;
+  font-size: min(1.45vw, 2.1vh);
   line-height: 1.5;
   color: var(--cream);
   border-left: 2px solid var(--neon-cyan);
@@ -1074,7 +1220,7 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
   display: block;
   font-style: normal;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.9vw;
+  font-size: min(1.08vw, 1.55vh);
   color: var(--cream-2);
   margin-top: 8px;
   letter-spacing: 2px;

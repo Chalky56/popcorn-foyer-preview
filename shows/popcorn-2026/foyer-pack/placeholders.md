@@ -7,6 +7,31 @@ This file is the central index of every piece of content still owed before we lo
 
 ---
 
+## Resolved 2026-06-24 (foyer review pass — Chris + Dean feedback)
+
+Canonical preview is now `popcorn-foyer.html` (the old `popcorn-foyer-preview.html` is a redirect stub).
+
+- **Glow toned down** across the set (esp. the cyan coming-soon slides); **smallest fonts enlarged**
+  (dates/footlines, archive text, ticket labels) with `min(vw,vh)` clamps applied set-wide — Chris's two notes.
+- **Top-right ON AIR / poster overlap fixed** (P02).
+- **Dean's director note** condensed from his programme text + **headshot** (`dean-sheridan-square.jpg`)
+  → P09 and `show.json` foyer_content.director. *Confirm final wording with Dean.*
+- **Karl Brezner + Farrah Delamitri** in-world covers added (XP5/XP6) with blurbs in `show.json`.
+  In-world covers now appear in **both** preshow (2 teasers, P14/P15) and postshow (full set of 6).
+- **Tickets QR** added to P13 (`tickets-qr.png`), captioned *not yet live*.
+- **Bar photo** (`bar-foyer.jpg`) on the interval (I01) and postshow (X01) bar slides.
+- **Rehearsal-photo placeholders**: preshow gallery (P16) + postshow cast montage (X11), auto-filling
+  from `assets/photos/`. *Owed by Chris.*
+- **Timing** raised toward ~10s; JSON playlists are canonical and the preview `data-dwell` mirrors them;
+  policy floors raised (preshow 9 / interval 7 / postshow 10); the misleading Dwell-box default removed.
+- **Engine parity** for the live obs-helper renderer is specced in
+  `docs/cascade-prompts/2026-06-24-foyer-engine-parity-popcorn.md` (run before the 27 Jun freeze, or defer).
+
+New owed items: **rehearsal/performance photos (Chris)** · **confirm Dean's note wording (Dean)** ·
+**QR destination URL go-live (David)**.
+
+---
+
 ## Blocking (must resolve before first night)
 
 | Owner             | Item                              | Where it's referenced |

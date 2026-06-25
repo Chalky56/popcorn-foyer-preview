@@ -120,6 +120,7 @@ function titleFromAsset(path) {
     .replace(/\.[^.]+$/, "")
     .replace(/[_-]+/g, " ")
     .replace(/\s+\d+\s+\d+$/, "")
+    .replace(/\s+cover$/i, "")
     .trim();
 }
 
@@ -391,39 +392,57 @@ export const slideTemplates = {
       </p>
       ${ctx.show?.foyer_content?.volunteer?.footline ? `<p class="footline">${ctx.show.foyer_content.volunteer.footline}</p>` : ""}`,
 
-  // P13 — tickets & walk-ins (ported for completeness; not in preshow loop yet)
+  // P13 — tickets & walk-ins. Carries the tickets QR beside the price tiers
+  // (destination not yet live — keep the "(QR not yet live)" caption).
   "tickets-walkins": (item, ctx) => {
     const prices = (ctx.show && ctx.show.ticket_prices) || {};
     return `<p class="eyebrow">Tickets &amp; walk-ins</p>
       <h2 class="headline small">TICKETS FROM ${prices.under_25 || "&pound;10"}</h2>
-      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:3%; max-width:88%; margin-top:18px;">
-        <div style="border:1.5px solid var(--neon-cyan); padding:18px 14px; border-radius:3px; background:rgba(0,229,255,0.06);">
-          <div style="font-family:'JetBrains Mono',monospace; font-size:0.95vw; color:var(--neon-cyan); letter-spacing:3px; text-transform:uppercase;">Standard</div>
-          <div style="font-family:'Anton',sans-serif; font-size:4.2vw; color:var(--white); letter-spacing:2px; margin-top:4px;">${prices.non_member || "&pound;15"}</div>
+      <div style="display:flex; gap:4%; align-items:center; max-width:94%; margin-top:18px;">
+        <div style="flex:1 1 auto; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:3%;">
+          <div style="border:1.5px solid var(--neon-cyan); padding:18px 14px; border-radius:3px; background:rgba(0,229,255,0.06);">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:min(1.15vw,1.6vh); color:var(--neon-cyan); letter-spacing:3px; text-transform:uppercase;">Standard</div>
+            <div style="font-family:'Anton',sans-serif; font-size:4.2vw; color:var(--white); letter-spacing:2px; margin-top:4px;">${prices.non_member || "&pound;15"}</div>
+          </div>
+          <div style="border:1.5px solid var(--neon-magenta); padding:18px 14px; border-radius:3px; background:rgba(255,26,117,0.06);">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:min(1.15vw,1.6vh); color:var(--neon-magenta); letter-spacing:3px; text-transform:uppercase;">Member</div>
+            <div style="font-family:'Anton',sans-serif; font-size:4.2vw; color:var(--white); letter-spacing:2px; margin-top:4px;">${prices.member || "&pound;12.50"}</div>
+          </div>
+          <div style="border:1.5px solid var(--poster-yellow); padding:18px 14px; border-radius:3px; background:rgba(255,212,52,0.06);">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:min(1.15vw,1.6vh); color:var(--poster-yellow); letter-spacing:3px; text-transform:uppercase;">Under 25</div>
+            <div style="font-family:'Anton',sans-serif; font-size:4.2vw; color:var(--white); letter-spacing:2px; margin-top:4px;">${prices.under_25 || "&pound;10"}</div>
+          </div>
         </div>
-        <div style="border:1.5px solid var(--neon-magenta); padding:18px 14px; border-radius:3px; background:rgba(255,26,117,0.06);">
-          <div style="font-family:'JetBrains Mono',monospace; font-size:0.95vw; color:var(--neon-magenta); letter-spacing:3px; text-transform:uppercase;">Member</div>
-          <div style="font-family:'Anton',sans-serif; font-size:4.2vw; color:var(--white); letter-spacing:2px; margin-top:4px;">${prices.member || "&pound;12.50"}</div>
-        </div>
-        <div style="border:1.5px solid var(--poster-yellow); padding:18px 14px; border-radius:3px; background:rgba(255,212,52,0.06);">
-          <div style="font-family:'JetBrains Mono',monospace; font-size:0.95vw; color:var(--poster-yellow); letter-spacing:3px; text-transform:uppercase;">Under 25</div>
-          <div style="font-family:'Anton',sans-serif; font-size:4.2vw; color:var(--white); letter-spacing:2px; margin-top:4px;">${prices.under_25 || "&pound;10"}</div>
+        <div style="flex:0 0 auto; text-align:center;">
+          <div style="width:11vw; max-width:170px; aspect-ratio:1/1; background:#FFFFFF; border:2px solid var(--neon-cyan); border-radius:6px; box-shadow:var(--glow-cyan); padding:6%; display:flex; align-items:center; justify-content:center;">
+            <img src="${asset(ctx, "assets/images/tickets-qr.png")}" alt="Scan to book tickets" style="width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=&quot;font-family:Anton,sans-serif;color:#111;letter-spacing:2px;&quot;>QR</span>';">
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:min(1.05vw,1.5vh); color:var(--neon-cyan); letter-spacing:2px; margin-top:9px; text-transform:uppercase;">Scan to book</div>
         </div>
       </div>
-      <p class="body small" style="margin-top:22px; color:var(--lavender);">
+      <p class="body small" style="margin-top:20px; color:var(--lavender);">
         Tonight's house is available unless otherwise announced. Walk-ins welcome at the box office.
         ${ctx.show?.tickets_url ? `Book online: <b style="color:var(--neon-cyan);">${ctx.show.tickets_url}</b>.` : ""}
       </p>`;
   },
 
-  // I01 — interval bar spotlight
-  "bar-spotlight": () => `<p class="eyebrow">At the bar tonight</p>
-      <h2 class="headline medium cyan">THE BAR IS OPEN</h2>
-      <p class="body">
-        Beers, wines, soft drinks and snacks available now in the foyer bar.
-        Please return to your seats when the bell sounds.
-      </p>
-      <p class="footline"><span style="color:var(--neon-magenta)">[ PLACEHOLDER ]</span> &nbsp; featured-drink slide to be supplied by bar team</p>`,
+  // I01 — interval bar spotlight (carries the real foyer-bar photo)
+  "bar-spotlight": (item, ctx) => `<div class="split-layout">
+        <div class="split-text">
+          <p class="eyebrow">At the bar tonight</p>
+          <h2 class="headline medium cyan">THE BAR IS OPEN</h2>
+          <p class="body" style="max-width:none;">
+            Beers, wines, soft drinks and snacks are being served now in the foyer bar.
+            Please head back to your seats when the bell sounds.
+          </p>
+        </div>
+        ${posterFrame(ctx, {
+          src: "assets/images/bar-foyer.jpg",
+          alt: "The Criterion foyer bar",
+          classes: "cyan",
+          fallback: `<strong>THE BAR</strong><span>foyer bar photo</span>`,
+        })}
+      </div>`,
 
   // I02 — live interval countdown; nextgen-foyer updates the data fields in place.
   "countdown": (item, ctx) => {
@@ -474,13 +493,24 @@ export const slideTemplates = {
       </p>
       <p class="footline">Registered charity 1161430</p>`,
 
-  // X01 — postshow bar
-  "bar-stays-open": () => `<p class="eyebrow calm">Thank you for being with us</p>
-      <h2 class="headline small">THE BAR STAYS OPEN</h2>
-      <p class="body">
-        The bar remains open until <b>23:00</b>. Stay a while &mdash; have a drink, talk it over, say hello to the cast.
-      </p>
-      <p class="footline">Tonight &#8226; 23:00 close</p>`,
+  // X01 — postshow bar (carries the real foyer-bar photo, muted frame)
+  "bar-stays-open": (item, ctx) => `<div class="split-layout">
+        <div class="split-text">
+          <p class="eyebrow calm">Thank you for being with us</p>
+          <h2 class="headline small">THE BAR STAYS OPEN</h2>
+          <p class="body" style="max-width:none;">
+            The bar is open until <b>23:00</b>. Stay a while &mdash; have a drink, talk it over,
+            and say hello to the cast.
+          </p>
+          <p class="footline">Tonight <span class="sep">&#8226;</span> 23:00 close</p>
+        </div>
+        ${posterFrame(ctx, {
+          src: "assets/images/bar-foyer.jpg",
+          alt: "The Criterion foyer bar",
+          classes: "muted",
+          fallback: `<strong>THE BAR</strong><span>foyer bar photo</span>`,
+        })}
+      </div>`,
 
   // X02 — postshow thanks
   "thank-you": (item, ctx) => `<p class="eyebrow calm">From everyone at ${ctx.show?.venue || "the theatre"}</p>
@@ -540,6 +570,22 @@ export const slideTemplates = {
       </div>`;
   },
 
+  // P16 — rehearsal-photo gallery (preshow). Auto-fills from
+  // assets/photos/rehearsal-0N.jpg; styled "photo pending" fallback per cell.
+  "production-gallery": (item, ctx) => `<p class="eyebrow">In rehearsal</p>
+      <h2 class="headline small">INSIDE THE REHEARSAL ROOM</h2>
+      <div class="photo-grid">
+        ${[1, 2, 3].map(n => `<div class="poster-frame contain"><img src="${asset(ctx, `assets/photos/rehearsal-0${n}.jpg`)}" alt="" onerror="this.parentElement.classList.add('missing')"><div class="fallback"><strong>PHOTO</strong><span>rehearsal shot</span></div></div>`).join("\n        ")}
+      </div>`,
+
+  // X11 — cast-in-performance montage (postshow). Auto-fills from
+  // assets/photos/performance-0N.jpg; muted frames + "photo pending" fallback.
+  "cast-gallery": (item, ctx) => `<p class="eyebrow calm">Tonight's company</p>
+      <h2 class="headline small">THE CAST OF POPCORN</h2>
+      <div class="photo-grid">
+        ${[1, 2, 3].map(n => `<div class="poster-frame muted contain"><img src="${asset(ctx, `assets/photos/performance-0${n}.jpg`)}" alt="" onerror="this.parentElement.classList.add('missing')"><div class="fallback"><strong>PHOTO</strong><span>cast in performance</span></div></div>`).join("\n        ")}
+      </div>`,
+
   // X05 — immediate next production, postshow treatment
   "next-production-postshow": (item, ctx) => {
     const prod = findProduction(ctx, item.production_id) || {};
@@ -593,5 +639,6 @@ export function fallbackSlide(item) {
 export function renderSlideHTML(item, ctx) {
   const template = item && item.template ? slideTemplates[item.template] : null;
   const inner = template ? template(item, ctx) : fallbackSlide(item);
-  return `<div class="slide active">${inner}</div>`;
+  const kind = item && item.template ? ` data-kind="${item.template}"` : "";
+  return `<div class="slide active"${kind}>${inner}</div>`;
 }

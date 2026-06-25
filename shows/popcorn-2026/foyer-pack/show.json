@@ -45,9 +45,9 @@
       "image_local": "assets/people/ben-elton-topaz-upscale-4x-face.jpg"
     },
     "director": {
-      "quote": "Ben Elton asked in 1996 who's to blame when our culture feeds on violence. Thirty years and a billion screens later, the question hasn't aged — it's multiplied. That's why we're staging Popcorn now.",
-      "_TBC_from_dean": "Placeholder quote (David-drafted). Replace with Dean's 25-40 word note when received — see placeholders.director-quote.",
-      "image_local": "assets/people/dean-sheridan-topaz-upscale-4x-face.jpg"
+      "quote": "We're quick to blame films, games and books when something terrible happens — anything but the person who chose to watch. Ben Elton wrote Popcorn in the nineties; it feels written for now. It holds a mirror up to all of us — and if you don't like the reflection, well… it's not my fault. <b>Everybody is responsible but me.</b>",
+      "_source": "Condensed 2026-06-24 by David/AI from Dean Sheridan's programme note. Confirm final wording with Dean.",
+      "image_local": "assets/people/dean-sheridan-square.jpg"
     },
     "trivia": {
       "headline": "The Oscars",
@@ -79,6 +79,18 @@
         "eyebrow": "Celebrity spotlight",
         "body": "Model, actress, and the face on every newsstand. Brooke Daniels wants to be taken seriously in a town that only takes pictures — and tonight, on Oscar night, she's about to land the role of her life.",
         "footline": "World-building from tonight's production"
+      },
+      "karl-brezner": {
+        "eyebrow": "On the cover",
+        "body": "The most powerful producer in Hollywood — the money and the muscle behind Bruce Delamitri's pictures. From blockbusters to cult classics, Brezner makes the movies we remember, and decides which ones we get to see.",
+        "footline": "\"Hollywood can't do without him. Neither can we.\"",
+        "_added": "2026-06-24 (David). In-world TIME cover prop. Poster assets/posters/karl-brezner.jpg."
+      },
+      "farrah-delamitri": {
+        "eyebrow": "Exclusive",
+        "body": "Inside the Delamitri fallout. Bruce's ex-wife — done playing nice, and set to take him for everything he's worth. The divorce that could be the most expensive in Hollywood history, told from the other side of the marriage.",
+        "footline": "World-building from tonight's production",
+        "_added": "2026-06-24 (David). In-world Vanity Fair cover prop. Poster assets/posters/farrah-delamitri-cover.jpg."
       }
     }
   },
@@ -111,7 +123,7 @@
     {
       "id": "loud-gunshots",
       "headline": "Loud gunshot effects",
-      "detail": "Sudden loud noises (gunshot effects) during Act II.",
+      "detail": "Sudden loud noises (gunshot effects).",
       "tier": "top",
       "confidence": "high"
     },
@@ -191,7 +203,8 @@
   "performances_ref":       "performances.json",
 
   "placeholders": [
-    { "id": "director-quote",       "owner": "Dean Sheridan",       "blocking": false, "notes": "Dean's 25-40 word note on staging Popcorn now." },
+    { "id": "director-quote",       "owner": "Dean Sheridan",       "blocking": false, "notes": "RESOLVED 2026-06-24: condensed from Dean's programme note (P09 + foyer_content.director). Confirm final wording with Dean." },
+    { "id": "rehearsal-photos",     "owner": "Chris",               "blocking": false, "notes": "Cast/rehearsal photos for preshow gallery (P16) + postshow montage (X11). Drop to assets/photos/rehearsal-0N.jpg and performance-0N.jpg." },
     { "id": "director-headshot",    "owner": "Dean Sheridan",       "blocking": false, "notes": "Headshot for the director slide. Drop to assets/people/dean-sheridan.jpg." },
     { "id": "bar-featured-drink",   "owner": "Bar team",            "blocking": false, "notes": "Featured drink + price for the INTERVAL spotlight." },
     { "id": "bar-stays-open-until", "owner": "Bar team",            "blocking": true,  "notes": "Confirm last orders / bar close time per night (assumed 23:00 in slides)." },
@@ -201,7 +214,7 @@
     { "id": "running-time-confirm", "owner": "Dean Sheridan",       "blocking": true,  "notes": "Confirm running time (estimated 130 min) and interval length (assumed 20 min)." },
     { "id": "underdog-director",    "owner": "Criterion programme", "blocking": false, "notes": "Production 549 lists Ruth Miller as 'Assistant Director' only - confirm whether she's directing or there's an unnamed director." },
     { "id": "shakespeare-cast",     "owner": "Criterion programme", "blocking": false, "notes": "Cast for Shakespeare in Love (550) not yet published - open reading 31 May." },
-    { "id": "qr-code-tickets",      "owner": "David",               "blocking": false, "notes": "Generate per-night QR codes pointing to /seats/<event_id> from tickets.json and overlay on next-production slides." },
+    { "id": "qr-code-tickets",      "owner": "David",               "blocking": false, "notes": "QR image now shown on the tickets slide P13 (assets/images/tickets-qr.png). Destination URL NOT yet live — caption says so. Later: per-night QR to /seats/<event_id> from tickets.json on next-production slides." },
     { "id": "ben-elton-photo",      "owner": "David",               "blocking": false, "notes": "Move C:\\Users\\chapm\\Downloads\\BenElton.jpg to assets/people/ben-elton.jpg." },
     { "id": "accessibility-slide",  "owner": "David",               "blocking": false, "notes": "Add a slide pointing at criteriontheatre.co.uk/about/accessibility - see 08-accessibility-audit.md §5b." }
   ],

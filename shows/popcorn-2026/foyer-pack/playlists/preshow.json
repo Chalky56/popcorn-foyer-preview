@@ -3,12 +3,13 @@
   "phase": "preshow",
   "show_id": "popcorn-2026",
   "policy": {
-    "min_dwell_seconds": 6,
+    "min_dwell_seconds": 9,
     "max_dwell_seconds": 14,
     "max_words_per_screen": 60,
     "consecutive_repeat": false,
     "loop_target_seconds": 240,
-    "audio_allowed": false
+    "audio_allowed": false,
+    "_dwell_notes": "min_dwell raised 6->9 on 2026-06-24 (Chris: slides ran a touch quick). dwell_seconds below mirror the per-slide data-dwell in popcorn-foyer.html; the engine clamps each to [min,max]."
   },
   "_notes": "Anchors play in defined order across the loop; wildcards bag-refill randomise alongside them. Anchor 'every_n' is the slot interval \u2014 rebalanced 2026-06-10 (David) from 6 to 2 so core content (tonight/cast/warnings/tickets) is every OTHER slide, restoring the signed-off deck's ~80% 'tonight' mix; tickets appears twice per anchor cycle (walk-ins are preshow's main sale). The HOUSE-OPEN content-warnings slides are once-per-house-open one-shots, not part of the loop. Slides render live HTML via js/slide-templates.js keyed by the 'template' field below; template keys match the signed-off data-kind values in popcorn-foyer.html.",
   "items": [
@@ -17,7 +18,7 @@
       "id": "welcome-tonight",
       "template": "welcome",
       "every_n": 2,
-      "dwell_seconds": 9,
+      "dwell_seconds": 10,
       "preview_ref": "popcorn-foyer.html#P01"
     },
     {
@@ -25,7 +26,7 @@
       "id": "tonight-show-info",
       "template": "show-info",
       "every_n": 2,
-      "dwell_seconds": 9,
+      "dwell_seconds": 10,
       "preview_ref": "popcorn-foyer.html#P02"
     },
     {
@@ -33,7 +34,7 @@
       "id": "tonight-cast",
       "template": "cast",
       "every_n": 2,
-      "dwell_seconds": 11,
+      "dwell_seconds": 12,
       "preview_ref": "popcorn-foyer.html#P03"
     },
     {
@@ -41,8 +42,8 @@
       "id": "tickets-walkins-early",
       "template": "tickets-walkins",
       "every_n": 2,
-      "dwell_seconds": 9,
-      "_notes": "Second tickets slot in the anchor cycle, spaced away from tickets-walkins below. Walk-in sales lead preshow.",
+      "dwell_seconds": 11,
+      "_notes": "Second tickets slot in the anchor cycle, spaced away from tickets-walkins below. Walk-in sales lead preshow. Now carries the tickets QR (not yet live).",
       "preview_ref": "popcorn-foyer.html#P13"
     },
     {
@@ -50,7 +51,7 @@
       "id": "content-warnings-top3",
       "template": "warning-top3",
       "every_n": 2,
-      "dwell_seconds": 9,
+      "dwell_seconds": 11,
       "preview_ref": "popcorn-foyer.html#P04"
     },
     {
@@ -58,7 +59,7 @@
       "id": "safety-phones-fire",
       "template": "safety",
       "every_n": 2,
-      "dwell_seconds": 8,
+      "dwell_seconds": 9,
       "preview_ref": "popcorn-foyer.html#P06"
     },
     {
@@ -67,7 +68,7 @@
       "template": "next-production",
       "every_n": 2,
       "production_ref": "next_productions.json#underdog-2026",
-      "dwell_seconds": 11,
+      "dwell_seconds": 12,
       "preview_ref": "popcorn-foyer.html#P11",
       "_notes": "Immediate next production. Includes poster (assets/posters/underdog-2026.jpg)."
     },
@@ -78,7 +79,7 @@
       "tag": "future_production",
       "weight": 1,
       "production_ref": "next_productions.json#shakespeare-in-love-2026",
-      "dwell_seconds": 10,
+      "dwell_seconds": 11,
       "preview_ref": "popcorn-foyer.html#P11b",
       "_notes": "After Underdog. Less frequent rotation since Underdog is the closer commercial ask."
     },
@@ -87,7 +88,7 @@
       "id": "volunteer-call",
       "template": "volunteer",
       "every_n": 2,
-      "dwell_seconds": 8,
+      "dwell_seconds": 9,
       "preview_ref": "popcorn-foyer.html#P12"
     },
     {
@@ -95,16 +96,16 @@
       "id": "tickets-walkins",
       "template": "tickets-walkins",
       "every_n": 2,
-      "dwell_seconds": 9,
+      "dwell_seconds": 11,
       "preview_ref": "popcorn-foyer.html#P13",
-      "_notes": "Added 2026-06-10 (David spotted it missing): template was ported in FOY-01b but never wired into the loop. FoH SOLD-OUT announcement overlays/replaces this slide."
+      "_notes": "Added 2026-06-10 (David spotted it missing): template was ported in FOY-01b but never wired into the loop. FoH SOLD-OUT announcement overlays/replaces this slide. Now carries the tickets QR (not yet live)."
     },
     {
       "kind": "one-shot",
       "id": "content-warnings-full-1",
       "template": "warning-full",
       "trigger": "house-open",
-      "dwell_seconds": 10,
+      "dwell_seconds": 11,
       "content": {
         "eyebrow": "Full Content Advisory",
         "headline": "CONTENT WARNINGS",
@@ -122,7 +123,7 @@
       "id": "content-warnings-full-2",
       "template": "warning-full",
       "trigger": "house-open",
-      "dwell_seconds": 10,
+      "dwell_seconds": 11,
       "content": {
         "eyebrow": "Full Content Advisory",
         "headline": "CONTENT & ACCESSIBILITY",
@@ -142,7 +143,7 @@
       "template": "about-ben",
       "tag": "context",
       "weight": 1,
-      "dwell_seconds": 10,
+      "dwell_seconds": 11,
       "preview_ref": "popcorn-foyer.html#P07"
     },
     {
@@ -151,7 +152,7 @@
       "template": "about-play",
       "tag": "context",
       "weight": 1,
-      "dwell_seconds": 10,
+      "dwell_seconds": 11,
       "preview_ref": "popcorn-foyer.html#P08"
     },
     {
@@ -160,8 +161,9 @@
       "template": "director-quote",
       "tag": "director_content",
       "weight": 2,
-      "dwell_seconds": 10,
-      "preview_ref": "popcorn-foyer.html#P09"
+      "dwell_seconds": 12,
+      "preview_ref": "popcorn-foyer.html#P09",
+      "_notes": "Now Dean's condensed programme note + headshot (assets/people/dean-sheridan-square.jpg)."
     },
     {
       "kind": "wildcard",
@@ -169,7 +171,7 @@
       "template": "did-you-know",
       "tag": "did_you_know",
       "weight": 1,
-      "dwell_seconds": 9,
+      "dwell_seconds": 10,
       "preview_ref": "popcorn-foyer.html#P10"
     },
     {
@@ -178,9 +180,61 @@
       "template": "did-you-know-criterion",
       "tag": "did_you_know",
       "weight": 1,
-      "dwell_seconds": 9,
+      "dwell_seconds": 10,
       "preview_ref": "popcorn-foyer.html#P10b",
       "_notes": "Facts sourced from criteriontheatre.co.uk/about/theatre \u2014 450+ productions, 1884 building, 6000 parts played, all-volunteer."
+    },
+    {
+      "kind": "wildcard",
+      "id": "feature-ordinary-americans-preshow",
+      "template": "popcorn-feature",
+      "tag": "in_world",
+      "weight": 1,
+      "source": "assets/posters/Ordinary_Americans_7_10.jpg",
+      "dwell_seconds": 10,
+      "preview_ref": "popcorn-foyer.html#P14",
+      "_notes": "Added 2026-06-24. In-world teaser in preshow (Chris's idea; David approved covers in both phases). Low weight so the fiction stays a garnish before curtain. The 'FROM THE FILM' badge keeps it from reading as a real coming-soon advert."
+    },
+    {
+      "kind": "wildcard",
+      "id": "feature-the-unamerican-preshow",
+      "template": "popcorn-feature",
+      "tag": "in_world",
+      "weight": 1,
+      "source": "assets/posters/The_Unamerican_7_10.jpg",
+      "dwell_seconds": 10,
+      "preview_ref": "popcorn-foyer.html#P15",
+      "_notes": "Added 2026-06-24. Preshow in-world teaser. The full in-world set (incl. Karl Brezner, Farrah Delamitri) plays in postshow."
+    },
+    {
+      "kind": "wildcard",
+      "id": "rehearsal-gallery",
+      "template": "production-gallery",
+      "tag": "gallery",
+      "weight": 1,
+      "dwell_seconds": 10,
+      "placeholder": true,
+      "placeholder_owner": "Chris",
+      "preview_ref": "popcorn-foyer.html#P16",
+      "_notes": "Added 2026-06-24. Rehearsal-photo montage; auto-fills from assets/photos/rehearsal-0N.jpg. Needs a new 'production-gallery' template in js/slide-templates.js \u2014 see the Cascade prompt. Hidden in --dev until photos land if you prefer."
+    },
+    {
+      "kind": "wildcard",
+      "id": "chris-video-preshow",
+      "tag": "chris_video",
+      "weight": 1,
+      "source": "videos/chris/01.mp4",
+      "dwell_seconds": null,
+      "treatment": "no-overlay",
+      "captions": {
+        "required": true,
+        "format": "burnt-in",
+        "language": "en-GB",
+        "verified": false
+      },
+      "placeholder": true,
+      "placeholder_owner": "Chris",
+      "_notes": "Added 2026-06-24 (David). Same file as postshow chris-video-1 (videos/chris/01.mp4) so Chris's Popcorn video plays in BOTH phases. Full-frame, no overlay, silent (audio_allowed=false) \u2014 needs burnt-in captions if it contains speech (set captions.verified=true once done). Delete this item to make the video postshow-only."
     }
   ]
 }
