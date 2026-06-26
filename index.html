@@ -358,6 +358,9 @@
         timer = window.setTimeout(() => advance(), dwell * 1000);
       }
     }
+    if (preview) {
+      updatePreviewNowShowing(current);
+    }
     await updateState(current, next);
   }
 
@@ -365,6 +368,9 @@
     const current = { kind: "single", template: route.template, tag: route.name };
     setCaption(current);
     renderSlide(current);
+    if (preview) {
+      updatePreviewNowShowing(current);
+    }
     await updateState(current, null);
   }
 
@@ -464,6 +470,34 @@
   // above (advance / renderSlide / renderVideo / setCaption / clearTimer /
   // buildScheduler). None of this runs or mutates state in broadcast mode.
   // =====================================================================
+  function previewProductionId(item) {
+    return item?.production_id || referenceId(item?.production_ref) || null;
+  }
+
+  function previewSlideName(item) {
+    const productionId = previewProductionId(item);
+    const productions = ctx?.nextProductions?.productions || [];
+    const production = productionId
+      ? productions.find(candidate => candidate.id === productionId)
+      : null;
+    return production?.title
+      || item?.label
+      || item?.template
+      || (item?.source ? item.source.split("/").pop() : (item?.tag || "?"));
+  }
+
+  function previewSlideLabel(item) {
+    const id = item?.id || "current slide";
+    return `${id} \u2014 ${previewSlideName(item)}`;
+  }
+
+  function updatePreviewNowShowing(item) {
+    const target = document.getElementById("ngp-now");
+    if (target) {
+      target.textContent = item ? previewSlideLabel(item) : "No slide";
+    }
+  }
+
   function renderPreviewEntry(entry) {
     setCaption(entry);
     if (isVideo(entry)) {
@@ -471,6 +505,7 @@
     } else {
       renderSlide(entry);
     }
+    updatePreviewNowShowing(entry);
   }
 
   function recordPreviewHistory(entry) {
@@ -574,13 +609,12 @@
         (currentPlaylistItems || [])
           .filter(item => item.id)
           .map(item => {
-            const detail = item.template
-              || (item.source ? item.source.split("/").pop() : (item.tag || "?"));
-            return `<option value="${escapeHTML(item.id)}">${escapeHTML(`${item.id} \u2192 ${detail}`)}</option>`;
+            return `<option value="${escapeHTML(item.id)}">${escapeHTML(previewSlideLabel(item))}</option>`;
           }),
       );
       select.innerHTML = options.join("");
     }
+    updatePreviewNowShowing(previewHistory[previewIndex]);
     updatePreviewPlayButton();
   }
 
@@ -645,6 +679,9 @@
       </div>
       <label class="ngp-field">Jump
         <select class="ngp-select" id="ngp-jump"></select>
+      </label>
+      <label class="ngp-field">Now showing
+        <span class="ngp-stamp" id="ngp-now">No slide</span>
       </label>
       <label class="ngp-field">Dwell
         <input type="number" class="ngp-input" id="ngp-dwell" min="2" max="60" step="1" placeholder="auto">s

@@ -405,6 +405,7 @@ export const slideTemplates = {
           </p>
           <p class="body small" style="color:var(--cream-2);">By ${credit}.${director}</p>
           <p class="footline">${formatRange(prod.run_dates && prod.run_dates.first, prod.run_dates && prod.run_dates.last)}</p>
+          ${bookBlock(prod, ctx)}
         </div>
         ${posterFrame(ctx, {
           src: prod.image_local,
@@ -663,6 +664,7 @@ export const slideTemplates = {
           <p class="subhead" style="color:var(--lavender); font-size:1.6vw;">${prod.author || ""}${prod.adapter ? ` &mdash; adapted by ${prod.adapter}` : ""}</p>
           <p class="review-quote">&ldquo;${review.quote || prod.synopsis_short || ""}&rdquo;<span class="source">${review.source || ""}</span></p>
           <p class="footline">${formatRange(prod.run_dates && prod.run_dates.first, prod.run_dates && prod.run_dates.last)} <span class="sep">/</span> Directed by ${prod.director || ""}</p>
+          ${bookBlock(prod, ctx)}
         </div>
         ${posterFrame(ctx, {
           src: prod.image_local,
