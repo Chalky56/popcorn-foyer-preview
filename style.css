@@ -648,7 +648,7 @@ body.announcement-overlay-page {
   box-sizing: border-box;
   width: 100%;
   max-width: 1500px;
-  min-height: 112px;
+  min-height: 96px;
   max-height: 156px;
   padding: 22px 34px;
   display: flex;
@@ -662,9 +662,9 @@ body.announcement-overlay-page {
     color-mix(in srgb, var(--ink-2, #1A0E2A) 92%, transparent)
   );
   border: 2px solid var(--neon-magenta, #FF1A75);
-  border-left: 12px solid var(--neon-cyan, #00E5FF);
+  border-left: 8px solid var(--neon-cyan, #00E5FF);
   border-radius: 14px;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
 .announcement-overlay-page[data-kind="nudge"] .announcement-band {
@@ -677,7 +677,7 @@ body.announcement-overlay-page {
   padding-right: 26px;
   border-right: 1px solid rgba(255, 255, 255, 0.18);
   font-family: var(--font-headline);
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.18em;
   white-space: nowrap;
@@ -691,9 +691,9 @@ body.announcement-overlay-page {
 .announcement-text {
   flex: 1 1 auto;
   min-width: 0;
-  color: var(--cream, var(--colour-primary-text, #F4E5C2));
+  color: var(--cream-2, var(--colour-primary-text, #F4E5C2));
   font-family: var(--font-headline);
-  font-size: 52px;
+  font-size: clamp(26px, 3.1vw, 40px);
   font-weight: 500;
   line-height: 1.08;
   letter-spacing: 0.01em;
@@ -936,12 +936,12 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
   max-width: 76%;
   margin: 0 0 18px 0;
 }
-.nextgen-foyer .body.small { font-size: min(1.38vw, 2vh); max-width: 72%; }
+.nextgen-foyer .body.small { font-size: min(1.55vw, 2.25vh); max-width: 72%; }
 .nextgen-foyer .body.mono  { font-family: 'JetBrains Mono', monospace; font-size: min(1.25vw, 1.8vh); letter-spacing: 1.5px; color: var(--lavender); }
 
 .nextgen-foyer .footline {
   font-family: 'JetBrains Mono', monospace;
-  font-size: min(1.18vw, 1.65vh);
+  font-size: min(1.3vw, 1.8vh);
   color: var(--cream-2);
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -983,19 +983,15 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
 
 /* warning chips (top-3) */
 .nextgen-foyer .warning-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 12px;
-  max-width: 88%;
-}
-.nextgen-foyer .warning-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(300px, 21vw) 1fr;
+  column-gap: 3%;
+  row-gap: 16px;
   align-items: center;
-  gap: 18px;
+  max-width: 94%;
+  margin-top: 18px;
 }
 .nextgen-foyer .warning-tag {
-  flex-shrink: 0;
   font-family: 'Anton', sans-serif;
   font-size: 1.6vw;
   letter-spacing: 1.5px;
@@ -1005,13 +1001,13 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
   padding: 6px 14px;
   border-radius: 3px;
   box-shadow: var(--glow-yellow);
-  min-width: 230px;
   text-align: center;
 }
 .nextgen-foyer .warning-detail {
-  font-size: min(1.32vw, 1.9vh);
+  font-size: min(1.46vw, 2.05vh);
   color: var(--cream);
   line-height: 1.4;
+  text-align: left;
 }
 
 /* pill (tbc markers) */
@@ -1163,9 +1159,71 @@ body.nextgen-foyer[data-phase="postshow"] .criterion-mark { opacity: 0.4; }
   color: var(--white);
   text-shadow: var(--glow-cyan);
 }
+.nextgen-foyer .countdown-display.is-label {
+  font-size: 6vw;
+}
 .nextgen-foyer .countdown-caption {
   margin-top: 34px;
   color: var(--cream-2);
+}
+
+/* Coming-up "scan to book" QR + ticket CTA */
+.nextgen-foyer .book-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 22px;
+}
+.nextgen-foyer .book-qr {
+  flex: 0 0 auto;
+  text-align: center;
+}
+.nextgen-foyer .book-qr-frame {
+  width: 8vw;
+  max-width: 120px;
+  aspect-ratio: 1 / 1;
+  background: #FFFFFF;
+  border: 2px solid var(--neon-cyan);
+  border-radius: 6px;
+  box-shadow: var(--glow-cyan);
+  padding: 6%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nextgen-foyer .book-qr-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.nextgen-foyer .book-qr-fallback {
+  font-family: 'Anton', sans-serif;
+  color: #111;
+  letter-spacing: 2px;
+}
+.nextgen-foyer .book-qr-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: min(1.05vw, 1.5vh);
+  color: var(--neon-cyan);
+  letter-spacing: 2px;
+  margin-top: 9px;
+  text-transform: uppercase;
+}
+.nextgen-foyer .ticket-cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: min(1.5vw, 2vh);
+  color: var(--neon-cyan);
+  letter-spacing: 1.5px;
+  text-transform: none;
+}
+.nextgen-foyer .tickets-pending {
+  margin-top: 22px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: min(1.3vw, 1.8vh);
+  color: var(--cream-2);
+  letter-spacing: 1px;
+  text-transform: none;
+  opacity: 0.85;
 }
 
 /* Postshow archive and coming-soon treatments. */

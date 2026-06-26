@@ -57,6 +57,13 @@ ASSET_MANIFEST = [
      "assets/posters/shakespeare-in-love-2026.jpg",
      "Shakespeare in Love (2026) — square 600px"),
 
+    # Easy 3 jazz night (event 10554) — landscape event photo, NOT a square poster.
+    # Added 2026-06-26. If the crop looks poor in the poster frame, replace this file
+    # manually with a squarer image.
+    (f"{CRITERION_BASE}/image/0/800/events/10554/images/uploads/26-Jun-15-r9f.jpg",
+     "assets/posters/easy-3-2026.jpg",
+     "Easy 3 jazz night (10 Jul 2026) — event image, 800px wide"),
+
     # Archive memory posters — production thumbnails referenced by postshow wildcards
     (f"{CRITERION_BASE}/poster/416/400",
      "assets/archive/single-spies-2012.jpg",

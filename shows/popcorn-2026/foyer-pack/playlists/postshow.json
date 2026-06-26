@@ -55,6 +55,16 @@
       "preview_ref": "popcorn-foyer.html#X05"
     },
     {
+      "kind": "anchor",
+      "id": "next-production-easy3-postshow",
+      "template": "next-production-postshow",
+      "every_n": 6,
+      "production_ref": "next_productions.json#easy-3-2026",
+      "dwell_seconds": 12,
+      "preview_ref": "popcorn-foyer.html#X05",
+      "_notes": "Added 2026-06-26. Easy 3 jazz night (10 Jul) \u2014 soonest upcoming event. Live HTML card (no pre-rendered PNG); poster pending at assets/posters/easy-3-2026.jpg."
+    },
+    {
       "kind": "wildcard",
       "id": "next-production-shakespeare-postshow",
       "template": "next-production-christmas",

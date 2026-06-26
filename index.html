@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Criterion Foyer Display</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20260626b">
 </head>
 <body class="nextgen-foyer" data-phase="preshow">
 <div class="ng-shell">
@@ -59,7 +59,7 @@
   import { getActiveShow, startShowPolling } from "./js/show-resolver.js";
   import { loadTheme } from "./js/theme-loader.js";
   import { Scheduler } from "./js/scheduler.js";
-  import { renderSlideHTML } from "./js/slide-templates.js";
+  import { renderSlideHTML } from "./js/slide-templates.js?v=20260626b";
 
   const params = new URLSearchParams(window.location.search);
   const dwellSeconds = params.get("dwell");
@@ -304,6 +304,7 @@
     display.textContent = countdown.state === "counting"
       ? `${countdown.minutes} MIN`
       : (countdown.state === "now" ? "ACT II" : `~${ctx.countdownWindowMinutes} MIN INTERVAL`);
+    display.classList.toggle("is-label", countdown.state === "clear");
     message.textContent = countdown.state === "counting"
       ? "Please make your way back to your seats when you hear the bell."
       : (countdown.state === "now"

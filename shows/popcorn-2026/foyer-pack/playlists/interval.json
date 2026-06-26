@@ -46,6 +46,17 @@
     },
     {
       "kind": "wildcard",
+      "id": "next-production-interval-easy3",
+      "template": "next-production-interval",
+      "tag": "next_production",
+      "weight": 2,
+      "production_ref": "next_productions.json#easy-3-2026",
+      "dwell_seconds": 10,
+      "preview_ref": "popcorn-foyer.html#I03",
+      "_notes": "Added 2026-06-26 (David): Easy 3 jazz night (10 Jul) is the soonest event - feature it in the interval mix with image + QR. Weighted 2x as the nearest on-sale."
+    },
+    {
+      "kind": "wildcard",
       "id": "next-production-interval-shakespeare",
       "template": "next-production-interval",
       "tag": "next_production",

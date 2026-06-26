@@ -140,6 +140,38 @@ function warningLine(warning) {
   return `<p class="body small"><b style="color:var(--poster-yellow);">${warning.headline}.</b> ${warning.detail}${pill}</p>`;
 }
 
+function ticketUrl(prod, ctx) {
+  return String((prod && prod.tickets_url) || (ctx && ctx.show && ctx.show.tickets_url) || "")
+    .replace(/^https?:\/\//, "");
+}
+
+function ticketCta(prod, ctx) {
+  const url = ticketUrl(prod, ctx);
+  return url ? `<p class="ticket-cta">${url}</p>` : "";
+}
+
+function bookQr(ctx) {
+  return `<div class="book-qr">
+        <div class="book-qr-frame">
+          <img src="${asset(ctx, "assets/images/tickets-qr.png")}" alt="Scan to book tickets" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=&quot;book-qr-fallback&quot;>QR</span>';">
+        </div>
+        <div class="book-qr-caption">Scan to book</div>
+      </div>`;
+}
+
+// Coming-up booking block: only advertise a QR + ticket link when the
+// production is actually on sale. Otherwise show a muted holding line so we
+// never promote a booking route we can't fulfil.
+function bookBlock(prod, ctx) {
+  if (prod && prod.tickets_on_sale === true) {
+    return `<div class="book-row">
+            ${bookQr(ctx)}
+            ${ticketCta(prod, ctx)}
+          </div>`;
+  }
+  return `<p class="tickets-pending">Tickets on sale nearer the date</p>`;
+}
+
 export const slideTemplates = {
   // P01 — welcome / tonight
   "welcome": (item, ctx) => {
@@ -200,10 +232,8 @@ export const slideTemplates = {
   // P04 — content warnings, rolling top three
   "warning-top3": (item, ctx) => {
     const tops = ((ctx.show && ctx.show.content_warnings) || []).filter(warning => warning.tier === "top");
-    const rows = tops.map(warning => `<div class="warning-row">
-            <div class="warning-tag">${warning.headline}</div>
-            <div class="warning-detail">${warning.detail}</div>
-          </div>`).join("\n          ");
+    const rows = tops.map(warning => `<div class="warning-tag">${warning.headline}</div>
+          <div class="warning-detail">${warning.detail}</div>`).join("\n          ");
     return `<p class="eyebrow warn">Content Notice</p>
       <h2 class="headline small">BEFORE YOU TAKE YOUR SEAT</h2>
       <div class="warning-list" style="margin-top:18px;">
@@ -347,7 +377,8 @@ export const slideTemplates = {
           <p class="body" style="max-width:none;">
             ${prod.synopsis_short || prod.synopsis_full || ""}
           </p>
-          <p class="footline">${formatRange(prod.run_dates && prod.run_dates.first, prod.run_dates && prod.run_dates.last)} <span class="sep">/</span> ${prod.tickets_url || ctx.show?.tickets_url || "Book at the box office"}</p>
+          <p class="footline">${formatRange(prod.run_dates && prod.run_dates.first, prod.run_dates && prod.run_dates.last)}</p>
+          ${bookBlock(prod, ctx)}
         </div>
         ${posterFrame(ctx, {
           src: prod.image_local,
@@ -422,7 +453,7 @@ export const slideTemplates = {
       </div>
       <p class="body small" style="margin-top:20px; color:var(--lavender);">
         Tonight's house is available unless otherwise announced. Walk-ins welcome at the box office.
-        ${ctx.show?.tickets_url ? `Book online: <b style="color:var(--neon-cyan);">${ctx.show.tickets_url}</b>.` : ""}
+        ${ctx.show?.tickets_url ? `Book online: <b style="color:var(--neon-cyan);">${ticketUrl(null, ctx)}</b>.` : ""}
       </p>`;
   },
 
@@ -458,9 +489,10 @@ export const slideTemplates = {
       : (countdown.state === "now"
         ? "Please take your seats. Act II is about to begin."
         : "Please enjoy the interval.");
+    const labelClass = countdown.state === "clear" ? " is-label" : "";
     return `<p class="eyebrow">Interval</p>
       <h2 class="headline small cyan">ACT II BEGINS IN</h2>
-      <div class="countdown-display" id="countdown-display">${value}</div>
+      <div class="countdown-display${labelClass}" id="countdown-display">${value}</div>
       <p class="body countdown-caption" id="countdown-caption">${caption}</p>`;
   },
 
@@ -476,6 +508,7 @@ export const slideTemplates = {
             ${prod.synopsis_short || prod.synopsis_full || ""}
           </p>
           <p class="footline">${formatRange(prod.run_dates && prod.run_dates.first, prod.run_dates && prod.run_dates.last)}</p>
+          ${bookBlock(prod, ctx)}
         </div>
         ${posterFrame(ctx, {
           src: prod.image_local,
@@ -494,15 +527,25 @@ export const slideTemplates = {
       <p class="footline">Registered charity 1161430</p>`,
 
   // X01 — postshow bar (carries the real foyer-bar photo, muted frame)
-  "bar-stays-open": (item, ctx) => `<div class="split-layout">
+  "bar-stays-open": (item, ctx) => {
+    const barClose = (ctx.performance && ctx.performance.bar_close) || "";
+    const hasTime = /^\d{1,2}:\d{2}$/.test(barClose);
+    const bodyCopy = hasTime
+      ? `The bar is open until <b>${barClose}</b>. Stay a while &mdash; have a drink, talk it over,
+            and say hello to the cast.`
+      : `The bar stays open after the show &mdash; ask our staff for tonight's last orders. Stay a while,
+            have a drink, talk it over, and say hello to the cast.`;
+    const footline = hasTime
+      ? `Tonight <span class="sep">&#8226;</span> ${barClose} close`
+      : `Tonight <span class="sep">&#8226;</span> the bar is open`;
+    return `<div class="split-layout">
         <div class="split-text">
           <p class="eyebrow calm">Thank you for being with us</p>
           <h2 class="headline small">THE BAR STAYS OPEN</h2>
           <p class="body" style="max-width:none;">
-            The bar is open until <b>23:00</b>. Stay a while &mdash; have a drink, talk it over,
-            and say hello to the cast.
+            ${bodyCopy}
           </p>
-          <p class="footline">Tonight <span class="sep">&#8226;</span> 23:00 close</p>
+          <p class="footline">${footline}</p>
         </div>
         ${posterFrame(ctx, {
           src: "assets/images/bar-foyer.jpg",
@@ -510,14 +553,16 @@ export const slideTemplates = {
           classes: "muted",
           fallback: `<strong>THE BAR</strong><span>foyer bar photo</span>`,
         })}
-      </div>`,
+      </div>`;
+  },
 
   // X02 — postshow thanks
   "thank-you": (item, ctx) => `<p class="eyebrow calm">From everyone at ${ctx.show?.venue || "the theatre"}</p>
       <h2 class="headline medium">THANK YOU</h2>
       <p class="body">
-        For supporting amateur theatre in Coventry. For making the journey to Earlsdon. For sitting in the dark
-        with us. We hope to see you again soon.
+        For supporting amateur theatre in Coventry. For making the journey to Earlsdon.
+        For sitting in the stifling heat with us &mdash; we noticed, and we're sorry.
+        Coming soon to this auditorium: air-conditioning. Probably.
       </p>`,
 
   // X03/X06-X10 plus additional archive pool entries
@@ -595,7 +640,8 @@ export const slideTemplates = {
           <h2 class="headline small cyan">${upper(prod.title) || "COMING SOON"}</h2>
           <p class="subhead" style="color:var(--lavender); font-size:1.9vw;">${prod.subtitle || ""}${prod.author ? ` &mdash; by ${prod.author}` : ""}</p>
           <p class="review-quote">${prod.synopsis_short || ""}</p>
-          <p class="footline">${formatRange(prod.run_dates && prod.run_dates.first, prod.run_dates && prod.run_dates.last)} <span class="sep">/</span> ${prod.tickets_url || ctx.show?.tickets_url || "Book at the box office"}</p>
+          <p class="footline">${formatRange(prod.run_dates && prod.run_dates.first, prod.run_dates && prod.run_dates.last)}</p>
+          ${bookBlock(prod, ctx)}
         </div>
         ${posterFrame(ctx, {
           src: prod.image_local,

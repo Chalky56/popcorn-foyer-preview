@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "_notes": "Scraped from criteriontheatre.co.uk on 2026-05-21. Both productions listed in archive/year/2026 alongside Popcorn. Cast for 550 was not yet listed at scrape time (open reading scheduled 31 May for casting).",
+  "_tickets_on_sale_note": "tickets_on_sale gates the booking QR + ticket URL on the Coming-Up slides. The theatre only puts tickets on sale near the date, so advertise everything but only show a booking link where you can actually buy. true = show QR + link; false/absent = advertise only (engine shows 'Tickets on sale nearer the date'). Flip to true when each goes on sale.",
   "productions": [
     {
       "id": "underdog-2026",
@@ -22,6 +23,7 @@
       "image_remote": "https://criteriontheatre.co.uk/poster/549/700",
       "image_local":  "assets/posters/underdog-2026.jpg",
       "icon_local":   "assets/posters/underdog-2026-icon.png",
+      "tickets_on_sale": false,
       "tickets_url":  "https://criteriontheatre.co.uk/tickets"
     },
     {
@@ -48,7 +50,25 @@
       "image_remote": "https://criteriontheatre.co.uk/poster/550/700",
       "image_local":  "assets/posters/shakespeare-in-love-2026.jpg",
       "icon_local":   "assets/posters/shakespeare-in-love-2026-icon.png",
+      "tickets_on_sale": false,
       "tickets_url":  "https://criteriontheatre.co.uk/tickets"
+    },
+    {
+      "id": "easy-3-2026",
+      "_type": "bar-event",
+      "_scraped": "criteriontheatre.co.uk/event/10554 on 2026-06-26. Sooner than the two mainstage productions (10 Jul, during/just after the Popcorn run). Presented as a full Coming-Soon card per David. CONFIRM: source says 'jazz quintet' though the name implies a trio; listing time 19:30–22:30 vs body 'from 8pm'; tickets 'available shortly' so tickets_url points at the event page for now.",
+      "production_page": "https://criteriontheatre.co.uk/event/10554",
+      "title": "Easy 3",
+      "subtitle": "Live Jazz in the Bar",
+      "author": "Easy 3",
+      "run_dates": { "first": "2026-07-10", "last": "2026-07-10" },
+      "synopsis_short": "A summer's evening of cool jazz, Latin, hip-hop and soul from touring quintet Easy 3 — creative covers and original compositions in the Criterion's lounge bar. Tickets £7.",
+      "synopsis_full": "What better way to spend a summer's eve than with some cool beats and musical grooves? Jazz quintet Easy 3 have delighted audiences across the UK with their creative covers and original compositions, drawing influence from jazz, Latin, hip-hop and soul. The evening takes place in the theatre's lounge bar from 8pm. Tickets £7.",
+      "image_remote": "https://criteriontheatre.co.uk/image/0/800/events/10554/images/uploads/26-Jun-15-r9f.jpg",
+      "image_local":  "assets/posters/easy-3-2026.jpg",
+      "icon_local":   "assets/posters/easy-3-2026-icon.png",
+      "tickets_on_sale": true,
+      "tickets_url":  "https://criteriontheatre.co.uk/event/10554"
     }
   ]
 }

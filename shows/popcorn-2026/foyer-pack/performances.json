@@ -2,6 +2,7 @@
   "schema_version": 1,
   "show_id": "popcorn-2026",
   "_source": "Scraped from https://criteriontheatre.co.uk/tickets on 2026-05-21. Door-to-door times are exactly as published on the public booking page.",
+  "_bar_close_note": "bar_close added 2026-06-26. Engine shows 'open until <bar_close>' only when it matches HH:MM; any non-time value (e.g. TBC) shows generic 'ask staff for last orders' copy and never a guessed time.",
   "performances": [
     {
       "id": "popcorn-2026-night-1",
@@ -12,6 +13,7 @@
       "estimated_finish": "22:00",
       "interval_at_estimated": "20:30",
       "act_2_at_estimated": "20:50",
+      "bar_close": "23:00",
       "press_night": false,
       "matinee": false,
       "notes": "First night."
@@ -25,6 +27,8 @@
       "estimated_finish": "19:30",
       "interval_at_estimated": "18:00",
       "act_2_at_estimated": "18:20",
+      "bar_close": "TBC",
+      "_bar_close_TBC": "MATINEE — confirm real bar close with the bar team and replace 'TBC' before David leaves. Until then the foyer shows generic 'ask staff for last orders' copy.",
       "press_night": false,
       "matinee": true,
       "notes": "Early-evening / matinee start. Only non-19:30 performance of the run."
@@ -38,6 +42,7 @@
       "estimated_finish": "22:00",
       "interval_at_estimated": "20:30",
       "act_2_at_estimated": "20:50",
+      "bar_close": "23:00",
       "press_night": false,
       "matinee": false,
       "notes": "Monday is dark."
@@ -50,7 +55,8 @@
       "house_opens": "19:00",
       "estimated_finish": "22:00",
       "interval_at_estimated": "20:30",
-      "act_2_at_estimated": "20:50"
+      "act_2_at_estimated": "20:50",
+      "bar_close": "23:00"
     },
     {
       "id": "popcorn-2026-night-5",
@@ -60,7 +66,8 @@
       "house_opens": "19:00",
       "estimated_finish": "22:00",
       "interval_at_estimated": "20:30",
-      "act_2_at_estimated": "20:50"
+      "act_2_at_estimated": "20:50",
+      "bar_close": "23:00"
     },
     {
       "id": "popcorn-2026-night-6",
@@ -70,7 +77,8 @@
       "house_opens": "19:00",
       "estimated_finish": "22:00",
       "interval_at_estimated": "20:30",
-      "act_2_at_estimated": "20:50"
+      "act_2_at_estimated": "20:50",
+      "bar_close": "23:00"
     },
     {
       "id": "popcorn-2026-night-7",
@@ -81,6 +89,7 @@
       "estimated_finish": "22:00",
       "interval_at_estimated": "20:30",
       "act_2_at_estimated": "20:50",
+      "bar_close": "23:00",
       "notes": "Closing night."
     }
   ],
