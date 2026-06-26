@@ -601,8 +601,26 @@
     }
   }
 
+  function fitPreviewCanvas() {
+    if (!preview) {
+      return;
+    }
+    const bar = document.querySelector(".ng-preview-bar");
+    const barHeight = bar ? bar.getBoundingClientRect().height : 0;
+    const availH = Math.max(0, window.innerHeight - barHeight);
+    const scale = Math.min(window.innerWidth / 1920, availH / 1080);
+    const scaledW = 1920 * scale;
+    const scaledH = 1080 * scale;
+    const left = Math.max(0, (window.innerWidth - scaledW) / 2);
+    const top = barHeight + Math.max(0, (availH - scaledH) / 2);
+    document.body.style.setProperty("--preview-scale", String(scale));
+    document.body.style.setProperty("--preview-left", `${left}px`);
+    document.body.style.setProperty("--preview-top", `${top}px`);
+  }
+
   function setupPreview() {
     if (previewBarBuilt) {
+      fitPreviewCanvas();
       return;
     }
     previewBarBuilt = true;
@@ -648,7 +666,12 @@
       const value = Number(event.target.value);
       previewDwellOverride = Number.isFinite(value) && value > 0 ? value : null;
     });
-    loadBuildStamp(document.getElementById("ngp-stamp"));
+    loadBuildStamp(document.getElementById("ngp-stamp")).finally(fitPreviewCanvas);
+    fitPreviewCanvas();
+    window.addEventListener("resize", fitPreviewCanvas);
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(fitPreviewCanvas).observe(bar);
+    }
   }
 
   async function boot() {
