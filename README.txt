@@ -1,9 +1,10 @@
 Criterion foyer export: popcorn-2026
 
 START HERE:
-  Open START-HERE.html directly from the extracted folder.
-  It links to the self-contained review page at shows/popcorn-2026/foyer-pack/popcorn-foyer.html?preview=1.
-  This is the file-share entry point for directors or publicity.
+  Open START-HERE.html for directors or publicity.
+  It links to the LIVE ENGINE review at index.html?preview=1
+  (phase tabs + step controls + build stamp — the real foyer output).
+  The engine needs a static host; serve the folder (see below) before reviewing.
 
 Live production engine:
   Do not open index.html directly with file://.
@@ -19,6 +20,7 @@ Share online:
 Production engine routes:
   ?phase=preshow | interval | postshow
   ?scene=welcome | coming-soon | tonight
+  Live engine review: ?preview=1 (e.g. index.html?preview=1)
 
-popcorn-foyer.html is a point-in-time review wrapper, separate from the live engine.
+popcorn-foyer.html is the STATIC design reference only, not the live screen.
 popcorn-foyer-preview.html is the retired preview and is not exported.

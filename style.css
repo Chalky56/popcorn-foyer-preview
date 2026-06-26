@@ -701,6 +701,7 @@ body.announcement-overlay-page {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
 }
 
@@ -1332,3 +1333,92 @@ body.nextgen-foyer.media-active .ng-media {
 }
 
 /* unknown-template fallback card uses the alert eyebrow + standard body. */
+
+/* =====================================================================
+   ENGINE REVIEW BAR (?preview=1 only)
+   Calm/dark reviewer chrome, clearly "not part of the foyer". Built by
+   nextgen-foyer.html only when ?preview=1, so broadcast capture never
+   sees it. Mirrors the retired mockup's .preview-header look.
+   ===================================================================== */
+.ng-preview-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 8px 16px;
+  background: #0B0710;
+  border-bottom: 1px solid #1F1530;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  font-family: 'JetBrains Mono', monospace;
+}
+.ng-preview-bar .ngp-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.ng-preview-bar .ngp-title {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #FFFFFF;
+}
+.ng-preview-bar .ngp-stamp {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #8C7BA6;
+}
+.ng-preview-bar .ngp-group {
+  display: flex;
+  background: #15101F;
+  border: 1px solid #2A1F40;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.ng-preview-bar .ngp-btn {
+  background: transparent;
+  color: #C8B9D8;
+  border: none;
+  padding: 7px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+.ng-preview-bar .ngp-btn:hover {
+  background: #1F1730;
+  color: #FFFFFF;
+}
+.ng-preview-bar .ngp-btn.active {
+  background: #FF1A75;
+  color: #1A0E2A;
+  font-weight: 700;
+}
+.ng-preview-bar .ngp-btn[data-phase="interval"].active { background: #00E5FF; }
+.ng-preview-bar .ngp-btn[data-phase="postshow"].active { background: #B43BFF; }
+.ng-preview-bar .ngp-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #8C7BA6;
+}
+.ng-preview-bar .ngp-select,
+.ng-preview-bar .ngp-input {
+  background: #15101F;
+  color: #F3ECF7;
+  border: 1px solid #2A1F40;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.ng-preview-bar .ngp-input { width: 58px; }
+.ng-preview-bar .ngp-select { max-width: 260px; }

@@ -99,9 +99,26 @@
     })[character]);
   }
 
-  const route = resolveRoute(params);
-  const phase = route?.name || null;
+  function referenceId(ref) {
+    if (!ref) {
+      return null;
+    }
+    const hashIndex = ref.indexOf("#");
+    return hashIndex >= 0 ? ref.slice(hashIndex + 1) : ref;
+  }
+
+  let route = resolveRoute(params);
+  let phase = route?.name || null;
   const houseOpen = params.get("houseOpen") === "1";
+
+  // --- Preview / review mode (?preview=1) state. Inert in broadcast. ---
+  const preview = params.get("preview") === "1";
+  let previewPaused = false;
+  let previewDwellOverride = null;
+  const previewHistory = [];
+  let previewIndex = -1;
+  let previewBarBuilt = false;
+  let currentPlaylistItems = [];
   const stage = document.getElementById("stage");
   const caption = document.getElementById("caption");
   const showLabel = document.getElementById("show-label");
@@ -199,9 +216,15 @@
     video.src = `${ctx.foyerPackBase.replace(/\/$/, "")}/${item.source.replace(/^\//, "")}`;
     video.onerror = () => {
       renderMissing(item);
-      advance();
+      if (!(preview && previewPaused)) {
+        advance();
+      }
     };
-    video.onended = () => advance();
+    video.onended = () => {
+      if (!(preview && previewPaused)) {
+        advance();
+      }
+    };
     const videoMeta = ctx.videoItems[item.source] || item;
     if (videoMeta.captions?.required && videoMeta.captions?.verified !== true) {
       console.warn(
@@ -323,11 +346,17 @@
       return;
     }
     setCaption(current);
+    if (preview) {
+      recordPreviewHistory(current);
+    }
     if (isVideo(current)) {
       renderVideo(current);
     } else {
       renderSlide(current);
-      timer = window.setTimeout(() => advance(), (current.dwell_seconds || 5) * 1000);
+      if (!(preview && previewPaused)) {
+        const dwell = (preview && previewDwellOverride) ? previewDwellOverride : (current.dwell_seconds || 5);
+        timer = window.setTimeout(() => advance(), dwell * 1000);
+      }
     }
     await updateState(current, next);
   }
@@ -416,6 +445,7 @@
       });
       await scheduler.init();
     }
+    currentPlaylistItems = playlist.items || [];
   }
 
   function renderUnavailableRoute() {
@@ -429,8 +459,203 @@
     </div>`;
   }
 
+  // =====================================================================
+  // Preview / review controller (?preview=1). Builds on the engine hooks
+  // above (advance / renderSlide / renderVideo / setCaption / clearTimer /
+  // buildScheduler). None of this runs or mutates state in broadcast mode.
+  // =====================================================================
+  function renderPreviewEntry(entry) {
+    setCaption(entry);
+    if (isVideo(entry)) {
+      renderVideo(entry);
+    } else {
+      renderSlide(entry);
+    }
+  }
+
+  function recordPreviewHistory(entry) {
+    previewHistory.push(entry);
+    previewIndex = previewHistory.length - 1;
+  }
+
+  function updatePreviewPlayButton() {
+    const btn = document.getElementById("ngp-play");
+    if (btn) {
+      btn.textContent = previewPaused ? "\u25B6 Play" : "\u275A\u275A Pause";
+    }
+  }
+
+  function previewPlay() {
+    previewPaused = false;
+    updatePreviewPlayButton();
+    advance();
+  }
+
+  function previewPause() {
+    previewPaused = true;
+    clearTimer();
+    updatePreviewPlayButton();
+  }
+
+  function previewTogglePlay() {
+    if (previewPaused) {
+      previewPlay();
+    } else {
+      previewPause();
+    }
+  }
+
+  async function previewStep() {
+    previewPaused = false;
+    await advance();
+    previewPause();
+  }
+
+  function previewPrev() {
+    if (previewIndex <= 0) {
+      return;
+    }
+    clearTimer();
+    previewPaused = true;
+    previewIndex -= 1;
+    renderPreviewEntry(previewHistory[previewIndex]);
+    updatePreviewPlayButton();
+  }
+
+  function previewJump(itemId) {
+    const item = (currentPlaylistItems || []).find(candidate => candidate.id === itemId);
+    if (!item) {
+      return;
+    }
+    const entry = {
+      ...item,
+      template: item.template || null,
+      source: item.source || null,
+      production_id: referenceId(item.production_ref),
+      dwell_seconds: item.dwell_seconds || 6,
+    };
+    clearTimer();
+    previewPaused = true;
+    recordPreviewHistory(entry);
+    renderPreviewEntry(entry);
+    updatePreviewPlayButton();
+  }
+
+  async function previewSetPhase(name) {
+    const phaseParams = new URLSearchParams();
+    phaseParams.set("phase", name);
+    const nextRoute = resolveRoute(phaseParams);
+    if (!nextRoute) {
+      return;
+    }
+    route = nextRoute;
+    phase = route?.name || null;
+    document.body.dataset.phase = route.phase || "unavailable";
+    clearTimer();
+    scheduler = null;
+    previewHistory.length = 0;
+    previewIndex = -1;
+    previewPaused = false;
+    await buildScheduler();
+    await advance();
+    refreshPreviewControls();
+  }
+
+  function refreshPreviewControls() {
+    if (!preview || !previewBarBuilt) {
+      return;
+    }
+    document.querySelectorAll("#ngp-phases .ngp-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.phase === route?.phase);
+    });
+    const select = document.getElementById("ngp-jump");
+    if (select) {
+      const options = ['<option value="">Jump to slide\u2026</option>'].concat(
+        (currentPlaylistItems || [])
+          .filter(item => item.id)
+          .map(item => {
+            const detail = item.template
+              || (item.source ? item.source.split("/").pop() : (item.tag || "?"));
+            return `<option value="${escapeHTML(item.id)}">${escapeHTML(`${item.id} \u2192 ${detail}`)}</option>`;
+          }),
+      );
+      select.innerHTML = options.join("");
+    }
+    updatePreviewPlayButton();
+  }
+
+  async function loadBuildStamp(target) {
+    if (!target) {
+      return;
+    }
+    try {
+      const response = await fetch(`build-info.json?t=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error("build-info.json unavailable");
+      }
+      const info = await response.json();
+      const builtAt = info.built_at ? new Date(info.built_at).toLocaleString() : "unknown";
+      target.textContent = `${info.version || "dev"} \u00B7 built ${builtAt}`;
+    } catch (error) {
+      target.textContent = "local / dev";
+    }
+  }
+
+  function setupPreview() {
+    if (previewBarBuilt) {
+      return;
+    }
+    previewBarBuilt = true;
+    document.body.classList.add("ng-preview");
+    const bar = document.createElement("div");
+    bar.className = "ng-preview-bar";
+    bar.setAttribute("aria-label", "Engine review controls");
+    bar.innerHTML = `
+      <div class="ngp-brand">
+        <span class="ngp-title">ENGINE REVIEW</span>
+        <span class="ngp-stamp" id="ngp-stamp">\u2026</span>
+      </div>
+      <div class="ngp-group" id="ngp-phases" role="tablist">
+        <button class="ngp-btn" data-phase="preshow">Preshow</button>
+        <button class="ngp-btn" data-phase="interval">Interval</button>
+        <button class="ngp-btn" data-phase="postshow">Postshow</button>
+      </div>
+      <div class="ngp-group">
+        <button class="ngp-btn" id="ngp-prev" title="Previous shown slide">\u25C0 Prev</button>
+        <button class="ngp-btn" id="ngp-play" title="Play / pause">\u275A\u275A Pause</button>
+        <button class="ngp-btn" id="ngp-next" title="Next slide, then pause">Next \u25B6</button>
+      </div>
+      <label class="ngp-field">Jump
+        <select class="ngp-select" id="ngp-jump"></select>
+      </label>
+      <label class="ngp-field">Dwell
+        <input type="number" class="ngp-input" id="ngp-dwell" min="2" max="60" step="1" placeholder="auto">s
+      </label>
+    `;
+    document.body.appendChild(bar);
+    bar.querySelectorAll("#ngp-phases .ngp-btn").forEach(btn => {
+      btn.addEventListener("click", () => previewSetPhase(btn.dataset.phase));
+    });
+    document.getElementById("ngp-prev").addEventListener("click", previewPrev);
+    document.getElementById("ngp-play").addEventListener("click", previewTogglePlay);
+    document.getElementById("ngp-next").addEventListener("click", previewStep);
+    document.getElementById("ngp-jump").addEventListener("change", event => {
+      if (event.target.value) {
+        previewJump(event.target.value);
+      }
+    });
+    document.getElementById("ngp-dwell").addEventListener("change", event => {
+      const value = Number(event.target.value);
+      previewDwellOverride = Number.isFinite(value) && value > 0 ? value : null;
+    });
+    loadBuildStamp(document.getElementById("ngp-stamp"));
+  }
+
   async function boot() {
     await loadTheme();
+    if (preview) {
+      setupPreview();
+    }
     if (!route) {
       renderUnavailableRoute();
       return;
@@ -440,6 +665,9 @@
       await renderSingleRoute();
     } else {
       await advance();
+    }
+    if (preview) {
+      refreshPreviewControls();
     }
   }
 
